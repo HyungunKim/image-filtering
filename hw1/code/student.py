@@ -28,8 +28,31 @@ def my_imfilter(image, kernel):
 
     ##################
     # Your code here #
+    
+    k_size = kernel.shape
+    k = k_size[0]
+
+    p = int((k-1)/2) # p is the padding size applied at each edges.
+
+    imshape = np.array(image.shape)
+    imshape[:2] += 2*p
+    padded_image = np.zeros(imshape)
+    padded_image[p:-p,p:-p] = image
+
+    ndImage = False
+    if len(imshape) == 3:
+        _ = np.zeros((k,k,imshape[-1]))
+        for c in range(imshape[-1]):
+            _[:,:,c] = kernel
+
+        kernel = _
+
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            filtered_image[x,y] = np.sum(np.multiply(padded_image[x:x+k, y:y+k], kernel), axis=(0,1))
+
   
-    print('my_imfilter function in student.py needs to be implemented')
+    #print('my_imfilter function in student.py needs to be implemented')
     ##################
 
     return filtered_image
@@ -51,6 +74,18 @@ def my_medfilter(image, size):
     ##################
     # Your code here #
     
+    p = int((size-1)/2) # p is the padding size applied at each edges.
+
+    imshape = np.array(image.shape)
+    imshape[:2] += 2*p
+    padded_image = np.zeros(imshape)
+    padded_image[p:-p,p:-p] = image
+
+
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            filtered_image[x,y] = np.median(padded_image[x:x+size, y:y+size], axis=(0,1))
+
     print('my_imfilter_fft function in student.py is not implemented')
     ##################
 
